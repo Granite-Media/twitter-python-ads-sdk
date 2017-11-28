@@ -4,14 +4,14 @@ import unittest
 from tests.support import with_resource, with_fixture, characters
 
 from twitter_ads.account import Account
-from twitter_ads.campaign import Campaign
+from twitter_ads.campaign import LineItem
 from twitter_ads.client import Client
 from twitter_ads.cursor import Cursor
 from twitter_ads import API_VERSION
 
 
 @responses.activate
-def test_campaigns_all():
+def test_line_items_all():
     responses.add(
             responses.GET,
             with_resource('/' + API_VERSION + '/accounts/2iqph'),
@@ -21,8 +21,8 @@ def test_campaigns_all():
 
     responses.add(
             responses.GET,
-            with_resource('/' + API_VERSION + '/accounts/2iqph/campaigns'),
-            body=with_fixture('campaigns_all'),
+            with_resource('/' + API_VERSION + '/accounts/2iqph/line_items'),
+            body=with_fixture('line_items_all'),
             content_type='application/json',
             )
 
@@ -35,7 +35,7 @@ def test_campaigns_all():
 
     account = Account.load(client, '2iqph')
 
-    cursor = account.campaigns()
+    cursor = account.line_items()
 
     assert cursor is not None
     assert isinstance(cursor, Cursor)
@@ -43,7 +43,7 @@ def test_campaigns_all():
 
 
 @responses.activate
-def test_campaign_load():
+def test_line_item_load():
     responses.add(
             responses.GET,
             with_resource('/' + API_VERSION + '/accounts/2iqph'),
@@ -54,8 +54,8 @@ def test_campaign_load():
     responses.add(
             responses.GET,
             with_resource(
-                '/' + API_VERSION + '/accounts/2iqph/campaigns/2wap7'),
-            body=with_fixture('campaigns_load'),
+                '/' + API_VERSION + '/accounts/2iqph/line_items/bw2'),
+            body=with_fixture('line_items_load'),
             content_type='application/json',
             )
 
@@ -68,13 +68,13 @@ def test_campaign_load():
 
     account = Account.load(client, '2iqph')
 
-    campaign = Campaign.load(account, '2wap7')
+    line_item = LineItem.load(account, 'bw2')
 
-    assert campaign
+    assert line_item
 
 
 @responses.activate
-def test_campaign_entity_status_exists():
+def test_line_item_entity_status_exists():
     responses.add(
             responses.GET,
             with_resource('/' + API_VERSION + '/accounts/2iqph'),
@@ -85,8 +85,8 @@ def test_campaign_entity_status_exists():
     responses.add(
             responses.GET,
             with_resource(
-                '/' + API_VERSION + '/accounts/2iqph/campaigns/2wap7'),
-            body=with_fixture('campaigns_load'),
+                '/' + API_VERSION + '/accounts/2iqph/line_items/bw2'),
+            body=with_fixture('line_items_load'),
             content_type='application/json',
             )
 
@@ -99,7 +99,7 @@ def test_campaign_entity_status_exists():
 
     account = Account.load(client, '2iqph')
 
-    campaign = Campaign.load(account, '2wap7')
+    line_item = LineItem.load(account, 'bw2')
 
-    assert campaign.entity_status
-    assert campaign.entity_status == 'ACTIVE'
+    assert line_item.entity_status
+    assert line_item.entity_status == 'ACTIVE'
