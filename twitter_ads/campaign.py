@@ -176,6 +176,11 @@ class LineItem(Resource, Persistence, Analytics, Batch):
         else:
             return TargetingCriteria.load(self.account, id, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if not self.categories:
+            self.categories = None
+        super(LineItem, self).save(*args, **kwargs)
+
 
 # line item properties
 # read-only
